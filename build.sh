@@ -7,7 +7,7 @@ FREEDOS_URL=http://www.freedos.org/download/download/FD12FLOPPY.zip
 # Get and install old qemu
 ( cd /root; wget -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
 ( cd /root/qemu; make install )
-qemu-system-i386 --help || exit 1
+/usr/local/bin/qemu --help || exit 1
 
 # Get 386BSD 1.0 CD and mount it
 for i in a b c; do
@@ -42,7 +42,7 @@ echo
 sleep 10
 echo boot 386bsd wd1d
 sleep 30
-) |qemu-system-i386     \
+) |/usr/local/bin/qemu  \
      -no-acpi           \
      -M isapc           \
      -fda FLOPPY.img    \
