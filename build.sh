@@ -4,6 +4,19 @@ OLDQEMU_URL=https://dugoh.github.io/oldqemu/qemu.tar.bz2
 CD386BSD_URL=https://dugoh.github.io/386bsdcd
 FREEDOS_URL=http://www.freedos.org/download/download/FD12FLOPPY.zip
 
+# Poor man's expect
+slowcat() {
+  [[ -z "${3}" ]] && echo usage: $0 file chunksize waittime && return 1
+  local c=0
+  local b=$(wc -c <${1})
+  while [ ${c} -lt ${b} ]; do
+    dd if=${1} bs=1 count=${2} skip=${c} 2>/dev/null
+    dd if=${1} bs=1 count=${2} skip=${c} 2>/dev/null |grep -q "^$" && sleep 5
+    (( c = c + ${2} ))
+    sleep ${3}
+  done
+}
+--------------------------------------------------------------------------------
 # Get and install old qemu
 ( cd /root; wget -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
 ( cd /root/qemu; make install )
@@ -24,8 +37,9 @@ ls FLOPPY.img || exit 1
 # Make some room on the floppy
 mcopy -i ./FLOPPY.img ::FDCONFIG.SYS ::/FDSetup/BIN/HIMEMX.EXE ./
 sed -i -e's/.FDSetup.BIN.//g' FDCONFIG.SYS
-mcopy -i ./FLOPPY.img -o FDCONFIG.SYS HIMEMX.EXE ::
-mdeltree -i ./FLOPPY.img FDSETUP AUTOEXEC.BAT SETUP.BAT
+printf "boot 386bsd wd1d\r\n" > AUTOEXEC.BAT
+mcopy -i ./FLOPPY.img -o FDCONFIG.SYS AUTOEXEC.BAT HIMEMX.EXE ::
+mdeltree -i ./FLOPPY.img FDSETUP SETUP.BAT
 
 # Copy in the boot utility and the kernels
 mcopy -i ./FLOPPY.img /mnt/386bsd /mnt/386bsd.ddb /mnt/boot.exe ::
@@ -34,21 +48,27 @@ mcopy -i ./FLOPPY.img /mnt/386bsd /mnt/386bsd.ddb /mnt/boot.exe ::
 dd if=/dev/zero of=disk.img bs=4096 count=129024
 
 # Try
+cat >keys <<__EOF
+y
+y
+y
+y
+y
+y
+__EOF
+
 (
-sleep 10
-echo 11-01-1994
-sleep 3
-echo
-sleep 10
-echo boot 386bsd wd1d
-sleep 30
-) |/usr/local/bin/qemu  \
+  sleep 30
+  slowcat keys 1 1
+  sleep 30
+) |TERM=vt100 qemu      \
+     -noreboot
      -no-acpi           \
      -M isapc           \
+     -m 4               \
      -fda FLOPPY.img    \
      -hda disk.img      \
      -hdachs 1024,16,63 \
      -hdb 386BSD-1.0    \
-     -curses            \
-     -m 4               \
-     -boot a
+     -boot a            \
+     -curses
