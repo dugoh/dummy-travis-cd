@@ -1,8 +1,8 @@
 #!/bin/bash
 
 OLDQEMU_URL=https://dugoh.github.io/oldqemu/qemu.tar.bz2
-386BSD_URL=https://dugoh.github.io/386bsdcd
-FREDOS_URL=http://www.freedos.org/download/download/FD12FLOPPY.zip
+CD386BSD_URL=https://dugoh.github.io/386bsdcd
+FREEDOS_URL=http://www.freedos.org/download/download/FD12FLOPPY.zip
 
 # Get and install old qemu
 ( cd /root; wget -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
@@ -10,7 +10,7 @@ FREDOS_URL=http://www.freedos.org/download/download/FD12FLOPPY.zip
 
 # Get 386BSD 1.0 CD and mount it
 for i in a b c; do
-  wget -O - "${386BSD_URL}"/x${i}
+  wget -O - "${CD386BSD_URL}"/x${i}
 done |bunzip2 -c >386BSD-1.0
 mount -t iso9660 386BSD-1.0 /mnt/
 
