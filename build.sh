@@ -7,16 +7,19 @@ FREEDOS_URL=http://www.freedos.org/download/download/FD12FLOPPY.zip
 # Get and install old qemu
 ( cd /root; wget -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
 ( cd /root/qemu; make install )
+qemu-system-i386 --help || exit 1
 
 # Get 386BSD 1.0 CD and mount it
 for i in a b c; do
   wget -O - "${CD386BSD_URL}"/x${i}
 done |bunzip2 -c >386BSD-1.0
 mount -t iso9660 386BSD-1.0 /mnt/
+ls /mnt/386bsd || exit 1
 
 # Download Freedos boot floppy
 wget "${FREEDOS_URL}"
-unzip FD12FLOPPY.zip
+unzip -o FD12FLOPPY.zip
+ls FLOPPY.img || exit 1
 
 # Make some room on the floppy
 mcopy -i ./FLOPPY.img ::FDCONFIG.SYS ::/FDSetup/BIN/HIMEMX.EXE ./
