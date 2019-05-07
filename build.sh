@@ -46,10 +46,12 @@ mcopy -i ./FLOPPY.img /mnt/386bsd /mnt/386bsd.ddb /mnt/boot.exe ::
 
 # Create empty disk
 dd if=/dev/zero of=disk.img bs=4096 count=129024
+ls -l disk.img || exit 1
 
 # Try
 cat >keys <<__EOF
 ./install
+
 y
 y
 y
@@ -67,10 +69,11 @@ __EOF
      -no-acpi                \
      -M isapc                \
      -m 4                    \
-     -net nic,model=ne2k_isa \
      -fda FLOPPY.img         \
      -hda disk.img           \
-     -hdachs 1024,16,63      \
      -hdb 386BSD-1.0         \
      -boot a                 \
+     -startdate "1994-11-01" \
      -curses
+#-hdachs 1024,16,63      \
+#-net nic,model=ne2k_isa \
