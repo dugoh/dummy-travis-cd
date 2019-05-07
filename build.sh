@@ -6,17 +6,17 @@ FREEDOS_URL=http://www.freedos.org/download/download/FD12FLOPPY.zip
 
 # Poor man's expect
 slowcat() {
-  [[ -z "${3}" ]] && echo usage: $0 file chunksize waittime && return 1
+  [[ -z "${4}" ]] && echo usage: $0 file chunksize keywait enterwait && return 1
   local c=0
   local b=$(wc -c <${1})
   while [ ${c} -lt ${b} ]; do
     dd if=${1} bs=1 count=${2} skip=${c} 2>/dev/null
-    dd if=${1} bs=1 count=${2} skip=${c} 2>/dev/null |grep -q "^$" && sleep 5
+    dd if=${1} bs=1 count=${2} skip=${c} 2>/dev/null |grep -q "^$" && sleep ${4}
     (( c = c + ${2} ))
     sleep ${3}
   done
 }
---------------------------------------------------------------------------------
+
 # Get and install old qemu
 ( cd /root; wget -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
 ( cd /root/qemu; make install )
@@ -59,16 +59,17 @@ __EOF
 
 (
   sleep 30
-  slowcat keys 1 1
-  sleep 30
-) |TERM=vt100 qemu      \
-     -noreboot
-     -no-acpi           \
-     -M isapc           \
-     -m 4               \
-     -fda FLOPPY.img    \
-     -hda disk.img      \
-     -hdachs 1024,16,63 \
-     -hdb 386BSD-1.0    \
-     -boot a            \
+  slowcat keys 1 1 15
+  sleep 300
+) |TERM=vt100 qemu           \
+     -no-reboot              \
+     -no-acpi                \
+     -M isapc                \
+     -m 4                    \
+     -net nic,model=ne2k_isa \
+     -fda FLOPPY.img         \
+     -hda disk.img           \
+     -hdachs 1024,16,63      \
+     -hdb 386BSD-1.0         \
+     -boot a                 \
      -curses
