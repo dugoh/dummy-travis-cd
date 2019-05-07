@@ -1,0 +1,15 @@
+sudo: required
+dist: trusty
+addons:
+  apt:
+    packages:
+    - libncurses5-dev
+language: bash
+
+before_script:
+  - ulimit -c unlimited -S
+  
+script:
+  - chmod +x ./build.sh ./upload.sh
+  - sudo ./build.sh
+  - sudo ./upload.sh
