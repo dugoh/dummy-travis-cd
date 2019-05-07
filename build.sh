@@ -49,6 +49,7 @@ dd if=/dev/zero of=disk.img bs=4096 count=129024
 
 # Try
 cat >keys <<__EOF
+./install
 y
 y
 y
