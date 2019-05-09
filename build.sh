@@ -53,11 +53,10 @@ cat >keys <<__EOF
 ./install
 
 y
+n
 y
 y
-y
-y
-y
+n
 __EOF
 
 (
