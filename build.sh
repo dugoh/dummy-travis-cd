@@ -20,8 +20,8 @@ slowcat() {
 # The video camera
 movietime() {
     export TERM=ms-vt100-color
-    stty rows 25
-    stty columns 80
+    stty rows 26
+    stty columns 81
     asciinema rec -y -c '/bin/bash -c ./build.sh' ./1.cast
     asciinema upload ./1.cast
     echo == m00 ==
@@ -65,7 +65,7 @@ dd if=/dev/zero of=disk.img bs=4096 count=129024
 ls -l disk.img || exit 1
 
 # Try
-cat >keys <<__EOF
+cat >keys1 <<__EOF
 ./install
 
 y
@@ -77,9 +77,11 @@ __EOF
 
 (
   sleep 30
-  slowcat keys 1 1 15
+  slowcat keys1 1 1 15
   sleep 100
-  printf "\x1b2quit\n"
+  printf "\x1b2"
+  sleep 3
+  printf "quit\n"
   sleep 3
 ) |qemu                      \
      -no-reboot              \
