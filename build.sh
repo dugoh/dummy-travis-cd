@@ -24,6 +24,7 @@ movietime() {
     stty rows 25
     stty columns 80
     asciinema rec -y -c '/bin/bash -c ./build.sh' ./1.cast
+    sed -i -e '1 s/height": 24/height": 25/' ./1.cast
     asciinema upload ./1.cast
     exit
 }
