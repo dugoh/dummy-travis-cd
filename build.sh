@@ -23,7 +23,10 @@ movietime() {
     stty rows 25
     stty columns 80
     asciinema rec -y -c '/bin/bash -c ./build.sh' ./1.cast
-    asciinema upload /1.cast
+    asciinema upload ./1.cast
+    echo == m00 ==
+    cat ./1.cast
+    echo == m00 ==
     exit
 }
 
