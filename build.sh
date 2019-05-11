@@ -24,7 +24,7 @@ movietime() {
     stty rows 27
     stty columns 82
     echo $TERM; stty -a; tput cols; tput lines
-    script -f -c "asciinema rec -y -c 'script -f -c ./build.sh' ./1.cast"
+    script -f -c "asciinema rec --stdin -y -c 'script -f -c ./build.sh' ./1.cast"
     #sed -i -e '1 s/height": 24/height": 26/' ./1.cast
     head -1 ./1.cast
     asciinema upload ./1.cast
@@ -67,10 +67,9 @@ ls -l disk.img >/dev/null 2>&1 || exit 1
 
 # Try
 cat >keys1 <<__EOF
-./install
-
+$(printf "\x1b1")./install$(printf "\x1b1")
 y
-n
+$(printf "\x1b1")n
 y
 y
 n
