@@ -74,7 +74,7 @@ y
 y
 n
 __EOF
-
+while true; do printf '.'; sleep 0.1; printf '\x08'; sleep 1; done &
 (
   sleep 30
   slowcat keys1 1 1 15
@@ -96,3 +96,4 @@ __EOF
      -curses'
 #-hdachs 1024,16,63      \
 #-net nic,model=ne2k_isa \
+kill %1
