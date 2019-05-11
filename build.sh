@@ -23,7 +23,7 @@ movietime() {
     export TERM=xterm
     stty rows 26
     stty columns 80
-    asciinema rec -y -c '/bin/bash -c ./build.sh' ./1.cast
+    asciinema rec -y -c 'script -f -c ./build.sh' ./1.cast
     sed -i -e '1 s/height": 24/height": 26/' ./1.cast
     head -1 ./1.cast
     asciinema upload ./1.cast
