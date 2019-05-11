@@ -19,9 +19,10 @@ slowcat() {
 
 # The video camera
 movietime() {
-    export TERM=ms-vt100-color
-    stty rows 26
-    stty columns 81
+    #export TERM=ms-vt100-color
+    export TERM=xterm
+    stty rows 25
+    stty columns 80
     asciinema rec -y -c '/bin/bash -c ./build.sh' ./1.cast
     asciinema upload ./1.cast
     exit
