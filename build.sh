@@ -35,19 +35,19 @@ ls ./1.cast >/dev/null 2>&1 || movietime
 # Get and install old qemu
 ( cd /root; wget -q -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
 ( cd /root/qemu; make install )
-/usr/local/bin/qemu --help || exit 1
+/usr/local/bin/qemu --help >/dev/null 2>&1 || exit 1
 
 # Get 386BSD 1.0 CD and mount it
 for i in a b c; do
   wget -q -O - "${CD386BSD_URL}"/x${i}
 done |bunzip2 -c >386BSD-1.0
 mount -t iso9660 386BSD-1.0 /mnt/
-ls /mnt/386bsd || exit 1
+ls /mnt/386bsd >/dev/null 2>&1 || exit 1
 
 # Download Freedos boot floppy
 wget -q "${FREEDOS_URL}"
 unzip -o FD12FLOPPY.zip
-ls FLOPPY.img || exit 1
+ls FLOPPY.img >/dev/null 2>&1 || exit 1
 
 # Make some room on the floppy
 mcopy -i ./FLOPPY.img ::FDCONFIG.SYS ::/FDSetup/BIN/HIMEMX.EXE ./
@@ -60,8 +60,8 @@ mdeltree -i ./FLOPPY.img FDSETUP SETUP.BAT
 mcopy -i ./FLOPPY.img /mnt/386bsd /mnt/386bsd.ddb /mnt/boot.exe ::
 
 # Create empty disk
-dd if=/dev/zero of=disk.img bs=4096 count=129024
-ls -l disk.img || exit 1
+dd if=/dev/zero of=disk.img bs=4096 count=129024 2>/dev/null
+ls -l disk.img >/dev/null 2>&1 || exit 1
 
 # Try
 cat >keys1 <<__EOF
