@@ -14,6 +14,8 @@ before_script:
   - ulimit -c unlimited -S
   
 script:
+  - sudo echo " === $(pwd) === "
+  - sudo pip3 install asciinema
   - chmod +x ./build.sh ./upload.sh
   - sudo ./build.sh
   - sudo ./upload.sh
