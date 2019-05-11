@@ -1,6 +1,5 @@
 #!/bin/bash
-echo $TERM
-stty -a
+echo $TERM; stty -a; tput cols; tput lines
 OLDQEMU_URL=https://dugoh.github.io/oldqemu/qemu.tar.bz2
 CD386BSD_URL=https://dugoh.github.io/386bsdcd
 FREEDOS_URL=http://www.freedos.org/download/download/FD12FLOPPY.zip
@@ -22,10 +21,11 @@ slowcat() {
 movietime() {
     #export TERM=ms-vt100-color
     export TERM=xterm
-    stty rows 26
-    stty columns 80
+    stty rows 27
+    stty columns 82
+    echo $TERM; stty -a; tput cols; tput lines
     script -f -c "asciinema rec -y -c 'script -f -c ./build.sh' ./1.cast"
-    sed -i -e '1 s/height": 24/height": 26/' ./1.cast
+    #sed -i -e '1 s/height": 24/height": 26/' ./1.cast
     head -1 ./1.cast
     asciinema upload ./1.cast
     exit
@@ -33,8 +33,7 @@ movietime() {
 
 # Start the recording if we haven't yet
 ls ./1.cast >/dev/null 2>&1 || movietime
-echo $TERM
-stty -a
+echo $TERM; stty -a; tput cols; tput lines
 # Get and install old qemu
 ( cd /root; wget -q -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
 ( cd /root/qemu; make install )
