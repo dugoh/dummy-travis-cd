@@ -75,7 +75,9 @@ __EOF
 (
   sleep 30
   slowcat keys 1 1 15
-  sleep 300
+  sleep 100
+  printf "\x1b2quit\n"
+  sleep 3
 ) |qemu                      \
      -no-reboot              \
      -no-acpi                \
