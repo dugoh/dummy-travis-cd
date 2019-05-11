@@ -83,7 +83,7 @@ __EOF
   sleep 3
   printf "quit\n"
   sleep 3
-) |qemu                      \
+) |script -f -c 'qemu        \
      -no-reboot              \
      -no-acpi                \
      -M isapc                \
@@ -93,6 +93,6 @@ __EOF
      -hdb 386BSD-1.0         \
      -boot a                 \
      -startdate "1994-11-01" \
-     -curses
+     -curses'
 #-hdachs 1024,16,63      \
 #-net nic,model=ne2k_isa \
