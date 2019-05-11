@@ -17,9 +17,17 @@ slowcat() {
   done
 }
 
-export TERM=vt220
-stty columns 80
-stty rows 25
+movietime() {
+    export TERM=ms-vt100-color
+    stty rows 25
+    stty columns 80
+    asciinema rec -y -c '/bin/bash -c ./script' /1.cast
+    asciinema upload /1.cast
+    exit
+}
+
+## Start the video camera if we havn't yet
+ls /1.cast >/dev/null 2>&1 || movietime
 
 # Get and install old qemu
 ( cd /root; wget -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
