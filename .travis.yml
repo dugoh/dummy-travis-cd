@@ -4,6 +4,10 @@ addons:
   apt:
     packages:
       - mtools
+      - python3
+      - python3-pip
+      - expect-dev
+
 language: bash
 
 before_script:
