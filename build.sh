@@ -24,9 +24,6 @@ movietime() {
     stty columns 81
     asciinema rec -y -c '/bin/bash -c ./build.sh' ./1.cast
     asciinema upload ./1.cast
-    echo == m00 ==
-    cat ./1.cast
-    echo == m00 ==
     exit
 }
 
@@ -34,19 +31,19 @@ movietime() {
 ls ./1.cast >/dev/null 2>&1 || movietime
 
 # Get and install old qemu
-( cd /root; wget -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
+( cd /root; wget -q -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
 ( cd /root/qemu; make install )
 /usr/local/bin/qemu --help || exit 1
 
 # Get 386BSD 1.0 CD and mount it
 for i in a b c; do
-  wget -O - "${CD386BSD_URL}"/x${i}
+  wget -q -O - "${CD386BSD_URL}"/x${i}
 done |bunzip2 -c >386BSD-1.0
 mount -t iso9660 386BSD-1.0 /mnt/
 ls /mnt/386bsd || exit 1
 
 # Download Freedos boot floppy
-wget "${FREEDOS_URL}"
+wget -q "${FREEDOS_URL}"
 unzip -o FD12FLOPPY.zip
 ls FLOPPY.img || exit 1
 
