@@ -17,6 +17,10 @@ slowcat() {
   done
 }
 
+export TERM=vt220
+stty columns 80
+stty rows 25
+
 # Get and install old qemu
 ( cd /root; wget -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
 ( cd /root/qemu; make install )
@@ -63,7 +67,7 @@ __EOF
   sleep 30
   slowcat keys 1 1 15
   sleep 300
-) |TERM=vt100 qemu           \
+) |qemu                      \
      -no-reboot              \
      -no-acpi                \
      -M isapc                \
