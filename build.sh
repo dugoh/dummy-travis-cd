@@ -24,15 +24,15 @@ movietime() {
     stty rows 27
     stty columns 82
     echo $TERM; stty -a; tput cols; tput lines
-    script -f -c "asciinema rec --stdin -y -c 'script -f -c ./build.sh' ./1.cast"
+    script -f -c "asciinema rec --stdin -y -c 'script -f -c ./build.sh' 1.cast"
     #sed -i -e '1 s/height": 24/height": 26/' ./1.cast
-    head -1 ./1.cast
-    asciinema upload ./1.cast
+    head -1 1.cast
+    asciinema upload 1.cast
     exit
 }
 
 # Start the recording if we haven't yet
-ls ./1.cast >/dev/null 2>&1 || movietime
+ls 1.cast >/dev/null 2>&1 || movietime
 echo $TERM; stty -a; tput cols; tput lines
 # Get and install old qemu
 ( cd /root; wget -q -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
@@ -74,16 +74,18 @@ y
 y
 n
 __EOF
-while true; do printf '\x16'; sleep 0.1; printf '\x16'; sleep 1; done &
-(
-  sleep 30
-  slowcat keys1 1 1 15
-  sleep 100
-  printf "\x1b2"
-  sleep 3
-  printf "quit\n"
-  sleep 3
-) |script -f -c 'qemu        \
+
+#(
+#  sleep 30
+#  slowcat keys1 1 1 15
+#  sleep 100
+#  printf "\x1b2"
+#  sleep 3
+#  printf "quit\n"
+#  sleep 3
+#) |
+( while true ; do fgrep 'erase' 1.cast >/dev/null && killall -9 qemu && tail 1.cast ) &
+script -f -c 'qemu        \
      -no-reboot              \
      -no-acpi                \
      -M isapc                \
@@ -96,4 +98,3 @@ while true; do printf '\x16'; sleep 0.1; printf '\x16'; sleep 1; done &
      -curses'
 #-hdachs 1024,16,63      \
 #-net nic,model=ne2k_isa \
-kill %1
