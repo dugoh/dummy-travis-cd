@@ -84,7 +84,7 @@ __EOF
 #  printf "quit\n"
 #  sleep 3
 #) |
-( while true ; do fgrep 'erase' 1.cast >/dev/null && killall -9 qemu && tail 1.cast ) &
+( while true ; do fgrep 'erase' 1.cast >/dev/null && killall -9 qemu && tail 1.cast; done ) &
 script -f -c 'qemu        \
      -no-reboot              \
      -no-acpi                \
