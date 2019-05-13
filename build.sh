@@ -52,7 +52,7 @@ autoattendant() {
       sleep 12
       for key in $(\
                      grep -o . <<< "${qa[$i+1]}"   \
-                       |sed -e's/[A-Z]/shift+&/'   \
+                       |sed -e's/[A-Z]/shift-&/'   \
                        |tr '[:upper:]' '[:lower:]' \
                   ) ret ; do
         echo "sendkey ${key}"
