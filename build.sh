@@ -19,11 +19,10 @@ slowcat() {
 
 # The video camera
 movietime() {
-  #export TERM=ms-vt100-color
-  export TERM=xterm
-  stty rows 27
-  stty columns 82
-  script -f -c "asciinema rec --stdin -y -c 'script -f -c ./build.sh' 1.cast"
+  export TERM=ms-vt100-color
+  stty rows 25
+  stty columns 80
+  script -qfc "asciinema rec --stdin -y -c 'script -qfc ./build.sh' 1.cast"
   asciinema upload 1.cast
   exit
 }
@@ -43,20 +42,24 @@ autoattendant() {
   )
 
   for ((i = 0; i < "${#qa[@]}"; i=i+2)); do
-    #echo "== going to search for $(echo "${qa[$i]}"|rev) =="
     until fgrep -q "${qa[$i]}" 1.cast 2>/dev/null ; do
       sleep 1
     done
-    #echo "== going to send ${qa[$i+1]} =="
     (
-      sleep 12
+      sleep 5
       for key in $(\
-                     grep -o . <<< "${qa[$i+1]}"   \
-                       |sed -e's/[A-Z]/shift-&/'   \
-                       |tr '[:upper:]' '[:lower:]' \
+                    grep -o . <<< "${qa[$i+1]}"  |sed -e's/minus/-/'         \
+                                                      -e's/ /spc/'           \
+                                                      -e's/=/equal/'         \
+                                                      -e's/,/comma/'         \
+                                                      -e's/\./dot/'          \
+                                                      -e's/\//slash/'        \
+                                                      -e's/\*/asterisk/'     \
+                                                      -e's/[A-Z]/shift-&/'   \
+                                                 |tr '[:upper:]' '[:lower:]' \
                   ) ret ; do
         echo "sendkey ${key}"
-        sleep .4
+        sleep .3
       done
     )|telnet localhost 3440 >/dev/null 2>&1
     sleep 5
@@ -100,9 +103,7 @@ ls -l disk.img >/dev/null 2>&1 || exit 1
 # Turn on the answering machine
 autoattendant &
 
-( sleep 333; asciinema upload 1.cast ) &
-
-script -f -c 'qemu           \
+script -qfc 'qemu            \
      -no-reboot              \
      -no-acpi                \
      -M isapc                \
