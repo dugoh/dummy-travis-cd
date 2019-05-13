@@ -47,10 +47,10 @@ autoattendant() {
       sleep 1
     done
     (
-      sleep 5
+      sleep 12
       for key in $(grep -o . <<< "${qa[$i+1]}") ret ; do
         echo "sendkey ${key}"
-        sleep .3
+        sleep .4
       done
     )|telnet localhost 3440 >/dev/null 2>&1
   done
@@ -93,7 +93,7 @@ ls -l disk.img >/dev/null 2>&1 || exit 1
 # Turn on the answering machine
 autoattendant &
 
-( sleep 300; asciinema upload 1.cast ) &
+( sleep 333; asciinema upload 1.cast ) &
 
 script -f -c 'qemu           \
      -no-reboot              \
