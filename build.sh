@@ -43,9 +43,11 @@ autoattendant() {
   )
 
   for ((i = 0; i < "${#qa[@]}"; i=i+2)); do
+    echo "== going to search for $(echo "${qa[$i]}"|rev) =="
     until fgrep -q "${qa[$i]}" 1.cast 2>/dev/null ; do
       sleep 1
     done
+    echo "== going to send ${qa[$i+1]} =="
     (
       sleep 12
       for key in $(grep -o . <<< "${qa[$i+1]}") ret ; do
@@ -53,6 +55,7 @@ autoattendant() {
         sleep .4
       done
     )|telnet localhost 3440 >/dev/null 2>&1
+    sleep 5
   done
 }
 
