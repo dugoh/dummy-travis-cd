@@ -42,14 +42,14 @@ autoattendant() {
   "[N.B. system installation on secondary drives must boot from DOS]" "reboot" \
   )
 
-  for ((i = 0; i < "${#qa[@]}"; i+2)); do
+  for ((i = 0; i < "${#qa[@]}"; i=i+2)); do
     until fgrep -q "${qa[$i]}" 1.cast 2>/dev/null ; do
       sleep 1
     done
     (
       sleep 5
-      for key in $(grep -o . <<< ${qa[$i+1]}) ret ; do
-        echo sendkey ${key}
+      for key in $(grep -o . <<< "${qa[$i+1]}") ret ; do
+        echo "sendkey ${key}"
         sleep .3
       done
     )|telnet localhost 3440 >/dev/null 2>&1
