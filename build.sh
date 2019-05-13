@@ -93,6 +93,8 @@ ls -l disk.img >/dev/null 2>&1 || exit 1
 # Turn on the answering machine
 autoattendant &
 
+( sleep 300; asciinema upload 1.cast ) &
+
 script -f -c 'qemu           \
      -no-reboot              \
      -no-acpi                \
