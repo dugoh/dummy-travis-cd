@@ -34,7 +34,7 @@ autoattendant() {
   "erase"                                                            "install" \
   "(Please press return to continue)"                                       "" \
   "Would you like to configure it for use with 386BSD? (y/n)"              "y" \
-  "Would you like a DOS partition table to be made by 386BSD? (y/n)"       "y" \
+  "Would you like a DOS partition table to be made by 386BSD? (y/n)"       "n" \
   "Do you want to configure the ENTIRE drive for 386BSD? (y/n)"            "y" \
   "Do you *still* want to configure the entire drive for 386BSD? (y/n)"    "y" \
   "paging storage? (y/n)"                                                  "n" \
