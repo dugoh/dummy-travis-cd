@@ -58,7 +58,7 @@ autoattendant() {
 
 # Start the recording if we haven't yet
 ls 1.cast >/dev/null 2>&1 || movietime
-echo $TERM; stty -a; tput cols; tput lines
+
 # Get and install old qemu
 ( cd /root; wget -q -O - "${OLDQEMU_URL}" |bunzip2 -c |tar -xf - )
 ( cd /root/qemu; make install )
