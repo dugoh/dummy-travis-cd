@@ -43,14 +43,18 @@ autoattendant() {
   )
 
   for ((i = 0; i < "${#qa[@]}"; i=i+2)); do
-    echo "== going to search for $(echo "${qa[$i]}"|rev) =="
+    #echo "== going to search for $(echo "${qa[$i]}"|rev) =="
     until fgrep -q "${qa[$i]}" 1.cast 2>/dev/null ; do
       sleep 1
     done
-    echo "== going to send ${qa[$i+1]} =="
+    #echo "== going to send ${qa[$i+1]} =="
     (
       sleep 12
-      for key in $(grep -o . <<< "${qa[$i+1]}") ret ; do
+      for key in $(\
+                     grep -o . <<< "${qa[$i+1]}"   \
+                       |sed -e's/[A-Z]/shift+&/'   \
+                       |tr '[:upper:]' '[:lower:]' \
+                  ) ret ; do
         echo "sendkey ${key}"
         sleep .4
       done
