@@ -22,7 +22,7 @@ movietime() {
   export TERM=ms-vt100-color
   stty rows 25
   stty columns 80
-  script -qfc "asciinema rec --stdin -y -c 'script -qfc ./build.sh' 1.cast"
+  script -qfc "asciinema rec -i 10 --stdin -c 'script -qfc ./build.sh' 1.cast"
   asciinema upload 1.cast
   exit
 }
