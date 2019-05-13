@@ -1,5 +1,5 @@
 #!/bin/bash
-echo $TERM; stty -a; tput cols; tput lines
+
 OLDQEMU_URL=https://dugoh.github.io/oldqemu/qemu.tar.bz2
 CD386BSD_URL=https://dugoh.github.io/386bsdcd
 FREEDOS_URL=http://www.freedos.org/download/download/FD12FLOPPY.zip
@@ -19,16 +19,42 @@ slowcat() {
 
 # The video camera
 movietime() {
-    #export TERM=ms-vt100-color
-    export TERM=xterm
-    stty rows 27
-    stty columns 82
-    echo $TERM; stty -a; tput cols; tput lines
-    script -f -c "asciinema rec --stdin -y -c 'script -f -c ./build.sh' 1.cast"
-    #sed -i -e '1 s/height": 24/height": 26/' ./1.cast
-    head -1 1.cast
-    asciinema upload 1.cast
-    exit
+  #export TERM=ms-vt100-color
+  export TERM=xterm
+  stty rows 27
+  stty columns 82
+  echo $TERM; stty -a; tput cols; tput lines
+  script -f -c "asciinema rec --stdin -y -c 'script -f -c ./build.sh' 1.cast"
+  asciinema upload 1.cast
+  exit
+}
+
+# The answering machine
+autoattendant() {
+  declare -a qa=(\
+  "erase"                                                            "install" \
+  "(Please press return to continue)"                                       "" \
+  "Would you like to configure it for use with 386BSD? (y/n)"              "y" \
+  "Would you like a DOS partition table to be made by 386BSD? (y/n)"       "y" \
+  "Do you want to configure the ENTIRE drive for 386BSD? (y/n)"            "y" \
+  "Do you *still* want to configure the entire drive for 386BSD? (y/n)"    "y" \
+  "paging storage? (y/n)"                                                  "n" \
+  "Enter one of the above designations(ex: US/Pacific):"                 "UTC" \
+  "[N.B. system installation on secondary drives must boot from DOS]" "reboot" \
+  )
+
+  for ((i = 0; i < "${#qa[@]}"; i+2)); do
+    until fgrep -q "${qa[$i]}" 1.cast 2>/dev/null ; do
+      sleep 1
+    done
+    (
+      sleep 5
+      for key $(grep -o . <<< ${qa[$i+1]}) ret ; do
+        echo sendkey ${key}
+        sleep .3
+      done
+    )|telnet localhost 3440 >/dev/null 2>&1
+  done
 }
 
 # Start the recording if we haven't yet
@@ -65,27 +91,10 @@ mcopy -i ./FLOPPY.img /mnt/386bsd /mnt/386bsd.ddb /mnt/boot.exe ::
 dd if=/dev/zero of=disk.img bs=4096 count=129024 2>/dev/null
 ls -l disk.img >/dev/null 2>&1 || exit 1
 
-# Try
-cat >keys1 <<__EOF
-$(printf "\x1b1")./install$(printf "\x1b1")
-y
-$(printf "\x1b1")n
-y
-y
-n
-__EOF
+# Turn on the answering machine
+autoattendant &
 
-#(
-#  sleep 30
-#  slowcat keys1 1 1 15
-#  sleep 100
-#  printf "\x1b2"
-#  sleep 3
-#  printf "quit\n"
-#  sleep 3
-#) |
-( until fgrep 'erase' 1.cast; do sleep 1; done ; sleep 5; killall qemu; sleep 3; killall -9 qemu; tail 1.cast ) &
-script -f -c 'qemu        \
+script -f -c 'qemu           \
      -no-reboot              \
      -no-acpi                \
      -M isapc                \
@@ -95,6 +104,5 @@ script -f -c 'qemu        \
      -hdb 386BSD-1.0         \
      -boot a                 \
      -startdate "1994-11-01" \
-     -curses'
-#-hdachs 1024,16,63      \
-#-net nic,model=ne2k_isa \
+     -curses                 \
+     -monitor tcp:127.0.0.1:3440,server,nowait'
