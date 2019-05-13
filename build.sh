@@ -23,7 +23,6 @@ movietime() {
   export TERM=xterm
   stty rows 27
   stty columns 82
-  echo $TERM; stty -a; tput cols; tput lines
   script -f -c "asciinema rec --stdin -y -c 'script -f -c ./build.sh' 1.cast"
   asciinema upload 1.cast
   exit
@@ -49,7 +48,7 @@ autoattendant() {
     done
     (
       sleep 5
-      for key $(grep -o . <<< ${qa[$i+1]}) ret ; do
+      for key in $(grep -o . <<< ${qa[$i+1]}) ret ; do
         echo sendkey ${key}
         sleep .3
       done
