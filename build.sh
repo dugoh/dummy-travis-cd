@@ -38,8 +38,8 @@ autoattendant() {
   "Do you want to configure the ENTIRE drive for 386BSD? (y/n)"            "y" \
   "Do you *still* want to configure the entire drive for 386BSD? (y/n)"    "y" \
   "paging storage? (y/n)"                                                  "n" \
-  "Enter one of the above designations(ex: US/Pacific):"                 "UTC" \
-  "[N.B. system installation on secondary drives must boot from DOS]" "reboot" \
+  "Enter one of the above designations"                                  "UTC" \
+  "N.B. system installation on secondary drives must boot from DOS"   "reboot" \
   )
 
   for ((i = 0; i < "${#qa[@]}"; i=i+2)); do
@@ -97,7 +97,7 @@ script -f -c 'qemu           \
      -no-reboot              \
      -no-acpi                \
      -M isapc                \
-     -m 16                    \
+     -m 16                   \
      -fda FLOPPY.img         \
      -hda disk.img           \
      -hdb 386BSD-1.0         \
