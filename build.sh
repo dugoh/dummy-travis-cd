@@ -97,7 +97,7 @@ script -f -c 'qemu           \
      -no-reboot              \
      -no-acpi                \
      -M isapc                \
-     -m 4                    \
+     -m 16                    \
      -fda FLOPPY.img         \
      -hda disk.img           \
      -hdb 386BSD-1.0         \
