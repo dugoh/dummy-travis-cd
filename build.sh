@@ -123,8 +123,8 @@ script -qfc 'qemu            \
      -curses                 \
      -monitor tcp:127.0.0.1:3440,server,nowait'
 
-sleep 10
-( (sleep 60 ; echo quit ; sleep 10)|telnet localhost 3440 ) &
+( sleep 20; (sleep 40 ; echo quit ; sleep 10) |telnet localhost 3440 ) &
+
 script -qfc 'qemu            \
      -no-reboot              \
      -no-acpi                \
