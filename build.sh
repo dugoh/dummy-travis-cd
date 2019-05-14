@@ -4,7 +4,7 @@ OLDQEMU_URL=https://dugoh.github.io/oldqemu/qemu.tar.bz2
 CD386BSD_URL=https://dugoh.github.io/386bsdcd
 FREEDOS_URL=http://www.freedos.org/download/download/FD12FLOPPY.zip
 
-# Poor man's expect
+# Like `cat' but slow
 slowcat() {
   [[ -z "${4}" ]] && echo usage: $0 file chunksize keywait enterwait && return 1
   local c=0
@@ -29,7 +29,7 @@ qtrans() {
       -e's/:/shift-semicolon/' \
       -e's/;/semicolon/'       \
       -e's/</shift-comma/'     \
-      -e's/</shift-dot/'       \
+      -e's/>/shift-dot/'       \
       -e's/[A-Z]/shift-&/'     \
     |tr '[:upper:]' '[:lower:]'
 }
@@ -120,5 +120,20 @@ script -qfc 'qemu            \
      -hdb 386BSD-1.0         \
      -boot a                 \
      -startdate "1994-11-01" \
+     -curses                 \
+     -monitor tcp:127.0.0.1:3440,server,nowait'
+
+sleep 10
+( (sleep 60 ; echo quit ; sleep 10)|telnet localhost 3440 ) &
+script -qfc 'qemu            \
+     -no-reboot              \
+     -no-acpi                \
+     -M isapc                \
+     -m 16                   \
+     -fda FLOPPY.img         \
+     -hda disk.img           \
+     -hdb 386BSD-1.0         \
+     -boot a                 \
+     -startdate "1994-11-02" \
      -curses                 \
      -monitor tcp:127.0.0.1:3440,server,nowait'
