@@ -17,6 +17,23 @@ slowcat() {
   done
 }
 
+# Translation of some characters to QEMU sendkey command arguments (incomplete)
+qtrans() {
+  sed -e's/-/minus/'           \
+      -e's/ /spc/'             \
+      -e's/=/equal/'           \
+      -e's/,/comma/'           \
+      -e's/\./dot/'            \
+      -e's/\//slash/'          \
+      -e's/\*/asterisk/'       \
+      -e's/:/shift-semicolon/' \
+      -e's/;/semicolon/'       \
+      -e's/</shift-comma/'     \
+      -e's/</shift-dot/'       \
+      -e's/[A-Z]/shift-&/'     \
+    |tr '[:upper:]' '[:lower:]'
+}
+
 # The video camera
 movietime() {
   export TERM=ms-vt100-color
@@ -47,17 +64,7 @@ autoattendant() {
     done
     (
       sleep 5
-      for key in $(\
-                    grep -o . <<< "${qa[$i+1]}"  |sed -e's/minus/-/'         \
-                                                      -e's/ /spc/'           \
-                                                      -e's/=/equal/'         \
-                                                      -e's/,/comma/'         \
-                                                      -e's/\./dot/'          \
-                                                      -e's/\//slash/'        \
-                                                      -e's/\*/asterisk/'     \
-                                                      -e's/[A-Z]/shift-&/'   \
-                                                 |tr '[:upper:]' '[:lower:]' \
-                  ) ret ; do
+      for key in $(grep -o . <<< "${qa[$i+1]}"  |qtrans) ret ; do
         echo "sendkey ${key}"
         sleep .3
       done
