@@ -80,7 +80,7 @@ bootc() {
        -M isapc                \
        -m 16                   \
        -fda FLOPPY.img         \
-       -hda disk.img           \
+       -hda dirtydisk.img      \
        -hdb 386BSD-1.0         \
        -boot c                 \
        -startdate "1994-11-02" \
@@ -138,10 +138,18 @@ script -qfc 'qemu            \
      -curses                 \
      -monitor tcp:127.0.0.1:3440,server,nowait'
 
+cp disk.img dirtydisk.img
+
 #( sleep 20; (sleep 40 ; echo quit ; sleep 10) |telnet localhost 3440 ) &
 
-( tail -f 1.cast |fgrep 'press key to boot/dump' | while read line; do
-    (sleep 10 ; echo quit ; sleep 10) |telnet localhost 3440
+#( tail -f 1.cast |fgrep 'press key to boot/dump' | while read line; do
+#    (sleep 10 ; echo quit ; sleep 10) |telnet localhost 3440
+#  done
+#) &
+
+(
+  while true ; do
+    (sleep 55 ; echo quit ; sleep 5) |telnet localhost 3440
   done
 ) &
 
@@ -151,12 +159,12 @@ script -qfc 'qemu            \
      -M isapc                \
      -m 16                   \
      -fda FLOPPY.img         \
-     -hda disk.img           \
+     -hda dirtydisk.img      \
      -hdb 386BSD-1.0         \
      -boot c                 \
      -startdate "1994-11-02" \
      -curses                 \
      -monitor tcp:127.0.0.1:3440,server,nowait'
 
-for i in $(seq 100); do echo "+++ boot $i +++" ; bootc; done 
+for i in $(seq 29); do echo "+++ boot $i +++" ; bootc; done 
      
