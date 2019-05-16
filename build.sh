@@ -142,6 +142,7 @@ script -qfc 'qemu            \
 
 ( tail -f 1.cast |fgrep 'press key to boot/dump' | while read line; do
     (sleep 10 ; echo quit ; sleep 10) |telnet localhost 3440
+  done
 ) &
 
 script -qfc 'qemu            \
