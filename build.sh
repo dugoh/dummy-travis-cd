@@ -88,6 +88,21 @@ bootc() {
        -monitor tcp:127.0.0.1:3440,server,nowait'
 }
 
+boota() {
+  script -qfc 'qemu            \
+       -no-reboot              \
+       -no-acpi                \
+       -M isapc                \
+       -m 16                   \
+       -fda FLOPPY.img         \
+       -hda dirtydisk.img      \
+       -hdb 386BSD-1.0         \
+       -boot a                 \
+       -startdate "1994-11-02" \
+       -curses                 \
+       -monitor tcp:127.0.0.1:3440,server,nowait'
+}
+
 # Start the recording if we haven't yet
 ls 1.cast >/dev/null 2>&1 || movietime
 
@@ -153,18 +168,10 @@ cp disk.img dirtydisk.img
   done
 ) &
 
-script -qfc 'qemu            \
-     -no-reboot              \
-     -no-acpi                \
-     -M isapc                \
-     -m 16                   \
-     -fda FLOPPY.img         \
-     -hda dirtydisk.img      \
-     -hdb 386BSD-1.0         \
-     -boot c                 \
-     -startdate "1994-11-02" \
-     -curses                 \
-     -monitor tcp:127.0.0.1:3440,server,nowait'
 
-for i in $(seq 29); do echo "+++ boot $i +++" ; bootc; done 
-     
+for i in $(seq 10); do echo "+++ bootc $i +++" ; bootc; done 
+
+sed -i -e's/wd1d/wd0a/' AUTOEXEC.BAT
+mcopy -i ./FLOPPY.img -o AUTOEXEC.BAT ::
+
+for i in $(seq 10); do echo "+++ boota $i +++" ; boota; done 
