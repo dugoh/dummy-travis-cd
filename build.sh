@@ -133,7 +133,7 @@ script -qfc 'qemu            \
      -fda FLOPPY.img         \
      -hda disk.img           \
      -hdb 386BSD-1.0         \
-     -boot a                 \
+     -boot c                 \
      -startdate "1994-11-02" \
      -curses                 \
      -monitor tcp:127.0.0.1:3440,server,nowait'
