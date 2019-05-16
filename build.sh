@@ -73,6 +73,21 @@ autoattendant() {
   done
 }
 
+bootc() {
+  script -qfc 'qemu            \
+       -no-reboot              \
+       -no-acpi                \
+       -M isapc                \
+       -m 16                   \
+       -fda FLOPPY.img         \
+       -hda disk.img           \
+       -hdb 386BSD-1.0         \
+       -boot c                 \
+       -startdate "1994-11-02" \
+       -curses                 \
+       -monitor tcp:127.0.0.1:3440,server,nowait'
+}
+
 # Start the recording if we haven't yet
 ls 1.cast >/dev/null 2>&1 || movietime
 
@@ -123,7 +138,11 @@ script -qfc 'qemu            \
      -curses                 \
      -monitor tcp:127.0.0.1:3440,server,nowait'
 
-( sleep 20; (sleep 40 ; echo quit ; sleep 10) |telnet localhost 3440 ) &
+#( sleep 20; (sleep 40 ; echo quit ; sleep 10) |telnet localhost 3440 ) &
+
+( tail -f 1.cast |fgrep 'press key to boot/dump' | while read line; do
+    (sleep 10 ; echo quit ; sleep 10) |telnet localhost 3440
+) &
 
 script -qfc 'qemu            \
      -no-reboot              \
@@ -137,3 +156,6 @@ script -qfc 'qemu            \
      -startdate "1994-11-02" \
      -curses                 \
      -monitor tcp:127.0.0.1:3440,server,nowait'
+
+for i in $(seq 100); do echo "+++ boot $i +++" ; bootc; done 
+     
